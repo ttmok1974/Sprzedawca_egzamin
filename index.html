@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Test egzaminacyjny – Promocja, mięso i mleko</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f3f3f3;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .question {
+        margin-bottom: 25px;
+        padding: 15px;
+        background: #fafafa;
+        border-left: 4px solid #2a7ae2;
+        border-radius: 5px;
+    }
+    .question.correct {
+        border-left-color: green;
+    }
+    .question.incorrect {
+        border-left-color: red;
+    }
+    .correct-answer {
+        margin-top: 10px;
+        color: green;
+        font-weight: bold;
+    }
+    button {
+        background: #2a7ae2;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    button:hover {
+        background: #1d5db5;
+    }
+    #result {
+        margin-top: 25px;
+        padding: 15px;
+        background: #e1ffe1;
+        border: 1px solid #23a323;
+        border-radius: 5px;
+        display: none;
+        font-size: 18px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Test egzaminacyjny</h1>
+
+<form id="quizForm"></form>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+// Tutaj wklejamy wszystkie pytania i odpowiedzi
+const questions = [
+    {
+        q: "Celem promocji jest:",
+        answers: [
+            { text: "Zwiększenie popytu na towary i usługi", correct: true },
+            { text: "Obniżenie produkcji", correct: false },
+            { text: "Likwidacja konkurencji siłowo", correct: false }
+        ]
+    },
+    {
+        q: "Do funkcji promocji NIE należy:",
+        answers: [
+            { text: "Funkcja informacyjna", correct: false },
+            { text: "Funkcja wspierająca i przypominająca", correct: false },
+            { text: "Funkcja budowlana", correct: true }
+        ]
+    },
+    {
+        q: "Strategia push polega na:",
+        answers: [
+            { text: "Działaniu producenta bezpośrednio na nabywcę", correct: false },
+            { text: "Wykorzystywaniu pośredników do promocji", correct: true },
+            { text: "Ograniczeniu sprzedaży", correct: false }
+        ]
+    },
+    {
+        q: "Do instrumentów promocji zaliczamy:",
+        answers: [
+            { text: "Reklamę, opakowanie produktu, sprzedaż osobistą", correct: true },
+            { text: "Tylko reklamę", correct: false },
+            { text: "Tylko działania ekologiczne", correct: false }
+        ]
+    },
+    {
+        q: "Mięso to:",
+        answers: [
+            { text: "Tkanka mięśniowa zwierząt rzeźnych z tłuszczem, ścięgnami i kośćmi", correct: true },
+            { text: "Dowolna część ciała zwierzęcia", correct: false },
+            { text: "Tylko tłuszcz zwierzęcy", correct: false }
+        ]
+    },
+    {
+        q: "Wędliny to:",
+        answers: [
+            { text: "Produkty otrzymywane wyłącznie z warzyw", correct: false },
+            { text: "Produkty otrzymywane z mięsa i podrobów po obróbce technologicznej", correct: true },
+            { text: "Produkty bez zawartości białka", correct: false }
+        ]
+    },
+    {
+        q: "Jaka temperatura jest odpowiednia do przechowywania mięsa świeżego?",
+        answers: [
+            { text: "2–10°C", correct: true },
+            { text: "20°C", correct: false },
+            { text: "-20°C", correct: false }
+        ]
+    },
+    {
+        q: "Konserwy mięsne poddaje się:",
+        answers: [
+            { text: "Pasteryzacji i sterylizacji", correct: true },
+            { text: "Suszeniu słonecznemu", correct: false },
+            { text: "Mrożeniu w ciekłym azocie", correct: false }
+        ]
+    },
+    {
+        q: "Jakie są główne składniki odżywcze mięsa drobiowego i jakie korzyści zdrowotne wiążą się z jego spożywaniem?",
+        answers: [
+            { text: "Białko, witaminy z grupy B, żelazo; wspiera mięśnie i odporność", correct: true },
+            { text: "Tylko tłuszcze i węglowodany", correct: false },
+            { text: "Tylko woda", correct: false }
+        ]
+    },
+    {
+        q: "Wymień i opisz wymagania jakościowe mięsa drobiowego.",
+        answers: [
+            { text: "Świeżość, odpowiedni zapach, barwa i tekstura", correct: true },
+            { text: "Brak wymagań jakościowych", correct: false },
+            { text: "Tylko zamrożenie", correct: false }
+        ]
+    },
+    {
+        q: "Jakie są różnice w przechowywaniu drobiu świeżego i mrożonego?",
+        answers: [
+            { text: "Świeży w lodówce 0-4°C, mrożony -18°C; różne okresy przydatności", correct: true },
+            { text: "Nie ma różnicy", correct: false },
+            { text: "Mrożony w lodówce, świeży w zamrażarce", correct: false }
+        ]
+    },
+    {
+        q: "Jakie rodzaje drobiu wymienia się i jakie części mięsa są dostępne?",
+        answers: [
+            { text: "Kurczak, indyk, gęś, kaczka; piersi, udka, skrzydła", correct: true },
+            { text: "Tylko kurczak; całe ciało", correct: false },
+            { text: "Tylko indyk; same skrzydła", correct: false }
+        ]
+    },
+    {
+        q: "Jakie znaczenie ma mleko w diecie człowieka i jakie są jego główne składniki odżywcze?",
+        answers: [
+            { text: "Białko, tłuszcze, wapń, witaminy; wspiera kości i rozwój", correct: true },
+            { text: "Tylko woda", correct: false },
+            { text: "Tylko cukry", correct: false }
+        ]
+    },
+    {
+        q: "Jakie są metody normalizacji mleka i homogenizacji?",
+        answers: [
+            { text: "Normalizacja zawartości tłuszczu, homogenizacja zapobiega rozwarstwianiu", correct: true },
+            { text: "Brak metod", correct: false },
+            { text: "Tylko mrożenie", correct: false }
+        ]
+    },
+    {
+        q: "Wymień rodzaje produktów mlecznych i ich charakterystyki.",
+        answers: [
+            { text: "Mleko, jogurty, sery, masło; różne zawartości tłuszczu i konsystencje", correct: true },
+            { text: "Tylko mleko", correct: false },
+            { text: "Tylko woda", correct: false }
+        ]
+    },
+    {
+        q: "Opisz proces produkcji i przechowywania serów.",
+        answers: [
+            { text: "Koagulacja mleka, dojrzewanie, przechowywanie w odpowiednich warunkach chłodniczych", correct: true },
+            { text: "Tylko pasteryzacja", correct: false },
+            { text: "Tylko zamrażanie", correct: false }
+        ]
+    }
+];
+
+// Funkcja do losowego tasowania
+function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
+// Tasujemy pytania i odpowiedzi
+const shuffledQuestions = shuffle(questions.map(q => ({
+    q: q.q,
+    answers: shuffle(q.answers)
+})));
+
+// Generowanie HTML pytań
+const quizForm = document.getElementById("quizForm");
+shuffledQuestions.forEach((q, i) => {
+    const div = document.createElement("div");
+    div.className = "question";
+    div.dataset.id = i;
+
+    let html = `<p><b>${i + 1}. ${q.q}</b></p>`;
+    q.answers.forEach(a => {
+        html += `<label><input type="radio" name="q${i}" value="${a.correct}"> ${a.text}</label><br>`;
+    });
+    div.innerHTML = html;
+    quizForm.appendChild(div);
+});
+
+// Sprawdzanie odpowiedzi
+function checkQuiz() {
+    let score = 0;
+
+    document.querySelectorAll(".question").forEach(question => {
+        const id = question.dataset.id;
+        const selected = question.querySelector("input:checked");
+        const correctAnswer = shuffledQuestions[id].answers.find(a => a.correct).text;
+
+        question.classList.remove("correct", "incorrect");
+        question.querySelectorAll(".correct-answer").forEach(el => el.remove());
+
+        if (!selected) return;
+
+        if (selected.value === "true") {
+            score++;
+            question.classList.add("correct");
+        } else {
+            question.classList.add("incorrect");
+            question.innerHTML += `<p class="correct-answer">Poprawna odpowiedź: ${correctAnswer}</p>`;
+        }
+    });
+
+    const resultBox = document.getElementById("result");
+    resultBox.style.display = "block";
+    resultBox.innerHTML = `Twój wynik: <b>${score} / ${questions.length}</b>`;
+}
+
+// Dodanie przycisku na końcu formularza
+const btn = document.createElement("button");
+btn.type = "button";
+btn.textContent = "Sprawdź wynik";
+btn.onclick = checkQuiz;
+quizForm.appendChild(btn);
+</script>
+
+</body>
+</html>
