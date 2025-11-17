@@ -204,6 +204,139 @@ const questions = [
             { text: "Tylko pasteryzacja", correct: false },
             { text: "Tylko zamrażanie", correct: false }
         ]
+    },
+
+    /* ─────────────────────────────────────────────
+       NOWE PYTANIA Z TWOICH NOTATEK (RYBY + WARZYWA)
+       ───────────────────────────────────────────── */
+    
+    {
+        q: "Na jakie grupy można podzielić ryby ze względu na środowisko życia?",
+        answers: [
+            { text: "Morskie i słodkowodne", correct: true },
+            { text: "Świeże i mrożone", correct: false },
+            { text: "Małe i duże", correct: false }
+        ]
+    },
+    {
+        q: "Które z poniższych ryb są morskie?",
+        answers: [
+            { text: "Flądra, śledź, mintaj", correct: true },
+            { text: "Pstrąg, karp", correct: false },
+            { text: "Lin, szczupak", correct: false }
+        ]
+    },
+    {
+        q: "Które ryby są słodkowodne?",
+        answers: [
+            { text: "Karp, sandacz, pstrąg", correct: true },
+            { text: "Łosoś, dorsz", correct: false },
+            { text: "Tuńczyk, makrela", correct: false }
+        ]
+    },
+    {
+        q: "Ryby chude mają zawartość tłuszczu:",
+        answers: [
+            { text: "Do 1%", correct: true },
+            { text: "1–5%", correct: false },
+            { text: "Powyżej 5%", correct: false }
+        ]
+    },
+    {
+        q: "Ryby tłuste mają zawartość tłuszczu:",
+        answers: [
+            { text: "Powyżej 5%", correct: true },
+            { text: "Do 1%", correct: false },
+            { text: "0%", correct: false }
+        ]
+    },
+    {
+        q: "Które z poniższych są rybami tłustymi?",
+        answers: [
+            { text: "Łosoś, makrela", correct: true },
+            { text: "Dorsz, morszczuk", correct: false },
+            { text: "Karp, sandacz", correct: false }
+        ]
+    },
+    {
+        q: "Najważniejszymi składnikami ryb są:",
+        answers: [
+            { text: "Białko, tłuszcze, witamina D, jod, selen", correct: true },
+            { text: "Wyłącznie woda", correct: false },
+            { text: "Węglowodany", correct: false }
+        ]
+    },
+    {
+        q: "W jakiej temperaturze przechowuje się mrożone ryby?",
+        answers: [
+            { text: "-18°C lub niżej", correct: true },
+            { text: "0–4°C", correct: false },
+            { text: "10°C", correct: false }
+        ]
+    },
+    {
+        q: "Owoce morza to:",
+        answers: [
+            { text: "Krewetki, kraby, ośmiornice", correct: true },
+            { text: "Warzywa morskie", correct: false },
+            { text: "Ryby słodkowodne", correct: false }
+        ]
+    },
+    {
+        q: "Warzywa nowalijki to:",
+        answers: [
+            { text: "Warzywa wczesne, o krótkim okresie wegetacji", correct: true },
+            { text: "Warzywa przechowywane zimą", correct: false },
+            { text: "Warzywa mrożone", correct: false }
+        ]
+    },
+    {
+        q: "Warzywa liściaste to m.in.:",
+        answers: [
+            { text: "Sałata, kapusta", correct: true },
+            { text: "Marchew, burak", correct: false },
+            { text: "Ziemniaki, cebula", correct: false }
+        ]
+    },
+    {
+        q: "Świeże warzywa zawierają:",
+        answers: [
+            { text: "70–90% wody", correct: true },
+            { text: "10–20% wody", correct: false },
+            { text: "50% wody", correct: false }
+        ]
+    },
+    {
+        q: "Jakie witaminy dominują w warzywach?",
+        answers: [
+            { text: "C, B, K", correct: true },
+            { text: "D i E", correct: false },
+            { text: "A i B12", correct: false }
+        ]
+    },
+    {
+        q: "W jakiej temperaturze przechowuje się marchew, buraki i chrzan?",
+        answers: [
+            { text: "0–4°C", correct: true },
+            { text: "10°C", correct: false },
+            { text: "-18°C", correct: false }
+        ]
+    },
+    {
+        q: "Pomidory powinno się przechowywać w temperaturze:",
+        answers: [
+            { text: "Około 10°C", correct: true },
+            { text: "0°C", correct: false },
+            { text: "-5°C", correct: false }
+        ]
+    },
+    {
+        q: "Które warzywa przechowuje się bardzo krótko?",
+        answers: [
+            { text: "Kalafior, kalarepa, papryka", correct: true },
+            { text: "Ziemniaki", correct: false },
+            { text: "Cebula", correct: false }
+        ]
     }
 ];
 
@@ -213,10 +346,12 @@ function shuffle(array) {
 }
 
 // Tasujemy pytania i odpowiedzi
-const shuffledQuestions = shuffle(questions.map(q => ({
-    q: q.q,
-    answers: shuffle(q.answers)
-})));
+const shuffledQuestions = shuffle(
+    questions.map(q => ({
+        q: q.q,
+        answers: shuffle(q.answers)
+    }))
+).slice(0, 20);  // <<< pobiera tylko 20 losowych pytań
 
 // Generowanie HTML pytań
 const quizForm = document.getElementById("quizForm");
