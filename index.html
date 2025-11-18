@@ -337,6 +337,108 @@ const questions = [
             { text: "Ziemniaki", correct: false },
             { text: "Cebula", correct: false }
         ]
+    },
+    /* ─────────────────────────────────────────────
+       NOWE PYTANIA Z TWOICH NOTATEK (Reszta)
+       ───────────────────────────────────────────── */
+     {
+        q: "W przypadku występowania rozbieżności między dokumentacją dostawy a sanem rzeczywistym dostarczonych towarów należy sporządzić protokół:",
+        answers: [
+            { text: "różnic w dostawie", correct: false },
+            { text: "zniszczeń towarów", correct: false },
+            { text: "różnic inwentaryzacyjnych", correct: false },
+            { text: "reklamacji usługi transportu", correct: true }
+        ]
+    },
+    {
+        q: "Dostawca przyjmując do magazynu zwroty zareklamowanych przez klienta towarów, powinien wystawić dowód:",
+        answers: [
+            { text: "PZ (Przyjęcie zewnętrzne)", correct: true },
+            { text: "WZ (Wydanie zewnętrzne)", correct: false },
+            { text: "PW (Przychód wewnętrzny)", correct: false },
+            { text: "MM (Przesunięcie międzymagazynowe)", correct: false }
+        ]
+    },
+    {
+        q: "Zgodnie z informacjami zamieszczonymi na etykietach towarów i kontrolą przeprowadzoną 10 maja 2025 r., wskaż, które produkty nie spełniają norm jakości:",
+        answers: [
+            { text: "Ser żółty Alek", correct: true },
+            { text: "Twaróg półtusty", correct: false },
+            { text: "Mleko świeże 2%", correct: false },
+            { text: "Herbatniki maślane Zizu", correct: false }
+        ]
+    },
+    {
+        q: "Oblicz cenę netto jednej sztuki sanek:",
+        answers: [
+            { text: "260,00 zł", correct: true },
+            { text: "319,80 zł", correct: false },
+            { text: "400,40 zł", correct: false },
+            { text: "520,00 zł", correct: false }
+        ]
+    },
+    {
+        q: "Hurtownia zakupiła narty u producenta w cenie zakupu netto 600,00 zł/para, stawka podatku VAT 23%. Ile wyniesie wartość zysku hurtowni ze sprzedaży 1 pary nart przy założeniu, że zrealizuje 40% ceny zakupu?",
+        answers: [
+            { text: "240,00 zł", correct: true },
+            { text: "295,20 zł", correct: false },
+            { text: "360,00 zł", correct: false },
+            { text: "442,80 zł", correct: false }
+        ]
+    },
+    {
+        q: "Cena sprzedaży netto towaru to 25,00 zł, a cena brutto 30,75 zł. Ile zapłaci klient za towar w przypadku uzyskania 25% rabatu?",
+        answers: [
+            { text: "6,25 zł", correct: false },
+            { text: "7,69 zł", correct: false },
+            { text: "18,75 zł", correct: false },
+            { text: "23,06 zł", correct: true }
+        ]
+    },
+    {
+        q: "W sklepie na wywieszonej cenowej towaru nie musi być umieszczona:",
+        answers: [
+            { text: "nazwa towaru", correct: false },
+            { text: "cena zakupu netto", correct: true },
+            { text: "cena sprzedaży brutto", correct: false },
+            { text: "jednostka miary oferowanego towaru", correct: false }
+        ]
+    },
+    {
+        q: "Ile wynosi wartość podatku VAT należnego po dokonaniu korekty sprzedaży na podstawie faktury korekty?",
+        answers: [
+            { text: "26,00 zł", correct: false },
+            { text: "41,60 zł", correct: true },
+            { text: "63,56 zł", correct: false },
+            { text: "66,04 zł", correct: false }
+        ]
+    },
+    {
+        q: "Ile wynosi stawka podatku VAT przy założeniu, że wartość brutto sprzedaży to 270,00 zł, a kwota VAT to 20,00 zł?",
+        answers: [
+            { text: "5%", correct: false },
+            { text: "0%", correct: false },
+            { text: "8%", correct: false },
+            { text: "23%", correct: true }
+        ]
+    },
+    {
+        q: "Dokumentem, który może być podstawą do złożenia reklamacji z tytułu udzielonej gwarancji, jest:",
+        answers: [
+            { text: "zamówienie", correct: false },
+            { text: "oświadczenie kupującego", correct: false },
+            { text: "karta gwarancyjna", correct: true },
+            { text: "aktualna oferta producenta", correct: false }
+        ]
+    },
+    {
+        q: "Klient zakupił rower 20.05.2024 r. Otrzymał paragon i kartę gwarancyjną z określonym terminie gwarancji 1 rok. Dnia 02.06.2025 r. zauważył wadę towaru – niesprawny hamulec. Zgodnie z przepisami:",
+        answers: [
+            { text: "może reklamować towar z tytułu niezgodności towaru z umową.", correct: true },
+            { text: "może reklamować towar z tytułu gwarancji.", correct: false },
+            { text: "nie ma możliwości reklamowania towaru z tytułu wady.", correct: false },
+            { text: "nie ma możliwości reklamowania towaru z tytułu niezgodności towaru z umową.", correct: false }
+        ]
     }
 ];
 
@@ -393,7 +495,7 @@ function checkQuiz() {
 
     const resultBox = document.getElementById("result");
     resultBox.style.display = "block";
-    resultBox.innerHTML = `Twój wynik: <b>${score} / ${questions.length}</b>`;
+    resultBox.innerHTML = `Twój wynik: <b>${score} / 20</b>`;
 }
 
 // Dodanie przycisku na końcu formularza
