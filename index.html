@@ -771,6 +771,14 @@ function checkQuiz() {
     const resultBox = document.getElementById("result");
     resultBox.style.display = "block";
     resultBox.innerHTML = `Twój wynik: <b>${score} / 30</b>`;
+    if(score>=15)
+    {
+        resultBox.innerHTML += `<br>Zdałeś test na ${(score/30)*100}%`;
+    }
+    else
+    {
+        resultBox.innerHTML += `<br>Nie zdałeś testu, twój wynik to ${((score/30)*100).toFixed(2)}%`;
+    }
 }
 
 // Dodanie przycisku na końcu formularza
