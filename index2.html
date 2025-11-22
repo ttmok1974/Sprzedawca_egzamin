@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Test – Pojedyncze pytania</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 800px;
+        margin: 40px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+    .question-box {
+        font-size: 22px;
+        margin-bottom: 25px;
+        font-weight: bold;
+    }
+    .answers label {
+        display: block;
+        margin-bottom: 12px;
+        font-size: 19px;
+        cursor: pointer;
+    }
+    button {
+        margin: 10px 5px;
+        padding: 12px 25px;
+        font-size: 18px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+    }
+    #prevBtn { background: #a1a1a1; color: white; }
+    #nextBtn { background: #2a7ae2; color: white; }
+    #nextBtn:hover { background: #1456aa; }
+    #resultBox {
+        font-size: 24px;
+        text-align: center;
+        margin-top: 20px;
+        padding: 20px;
+        background: #e3ffe3;
+        border: 2px solid #2ecc71;
+        border-radius: 10px;
+        display: none;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1 style="text-align: center;">Test egzaminacyjny</h1> 
+    <div id="quizArea">
+        <div id="questionNumber" style="font-size:18px; color:#555;"></div>
+
+        <div class="question-box" id="questionText"></div>
+
+        <div class="answers" id="answersBox"></div>
+
+        <button id="prevBtn" onclick="prevQuestion()">WSTECZ</button>
+        <button id="nextBtn" onclick="nextQuestion()">DALEJ</button>
+    </div>
+
+    <div id="resultBox"></div>
+
+</div>
+
+<script>
+
+// ------------------------------------------------------
+// 1. TWOJA BAZA PYTAŃ (WSTAW TUTAJ WSZYSTKIE 74+)
+// ------------------------------------------------------
+const questions = [ { q: "Celem promocji jest:", answers: [ { text: "Zwiększenie popytu na towary i usługi", correct: true }, { text: "Obniżenie produkcji", correct: false }, { text: "Likwidacja konkurencji siłowo", correct: false } ] }, { q: "Do funkcji promocji NIE należy:", answers: [ { text: "Funkcja informacyjna", correct: false }, { text: "Funkcja wspierająca i przypominająca", correct: false }, { text: "Funkcja budowlana", correct: true } ] }, { q: "Strategia push polega na:", answers: [ { text: "Działaniu producenta bezpośrednio na nabywcę", correct: false }, { text: "Wykorzystywaniu pośredników do promocji", correct: true }, { text: "Ograniczeniu sprzedaży", correct: false } ] }, { q: "Do instrumentów promocji zaliczamy:", answers: [ { text: "Reklamę, opakowanie produktu, sprzedaż osobistą", correct: true }, { text: "Tylko reklamę", correct: false }, { text: "Tylko działania ekologiczne", correct: false } ] }, { q: "Mięso to:", answers: [ { text: "Tkanka mięśniowa zwierząt rzeźnych z tłuszczem, ścięgnami i kośćmi", correct: true }, { text: "Dowolna część ciała zwierzęcia", correct: false }, { text: "Tylko tłuszcz zwierzęcy", correct: false } ] }, { q: "Wędliny to:", answers: [ { text: "Produkty otrzymywane wyłącznie z warzyw", correct: false }, { text: "Produkty otrzymywane z mięsa i podrobów po obróbce technologicznej", correct: true }, { text: "Produkty bez zawartości białka", correct: false } ] }, { q: "Jaka temperatura jest odpowiednia do przechowywania mięsa świeżego?", answers: [ { text: "2–10°C", correct: true }, { text: "20°C", correct: false }, { text: "-20°C", correct: false } ] }, { q: "Konserwy mięsne poddaje się:", answers: [ { text: "Pasteryzacji i sterylizacji", correct: true }, { text: "Suszeniu słonecznemu", correct: false }, { text: "Mrożeniu w ciekłym azocie", correct: false } ] }, { q: "Jakie są główne składniki odżywcze mięsa drobiowego i jakie korzyści zdrowotne wiążą się z jego spożywaniem?", answers: [ { text: "Białko, witaminy z grupy B, żelazo; wspiera mięśnie i odporność", correct: true }, { text: "Tylko tłuszcze i węglowodany", correct: false }, { text: "Tylko woda", correct: false } ] }, { q: "Wymień i opisz wymagania jakościowe mięsa drobiowego.", answers: [ { text: "Świeżość, odpowiedni zapach, barwa i tekstura", correct: true }, { text: "Brak wymagań jakościowych", correct: false }, { text: "Tylko zamrożenie", correct: false } ] }, { q: "Jakie są różnice w przechowywaniu drobiu świeżego i mrożonego?", answers: [ { text: "Świeży w lodówce 0-4°C, mrożony -18°C; różne okresy przydatności", correct: true }, { text: "Nie ma różnicy", correct: false }, { text: "Mrożony w lodówce, świeży w zamrażarce", correct: false } ] }, { q: "Jakie rodzaje drobiu wymienia się i jakie części mięsa są dostępne?", answers: [ { text: "Kurczak, indyk, gęś, kaczka; piersi, udka, skrzydła", correct: true }, { text: "Tylko kurczak; całe ciało", correct: false }, { text: "Tylko indyk; same skrzydła", correct: false } ] }, { q: "Jakie znaczenie ma mleko w diecie człowieka i jakie są jego główne składniki odżywcze?", answers: [ { text: "Białko, tłuszcze, wapń, witaminy; wspiera kości i rozwój", correct: true }, { text: "Tylko woda", correct: false }, { text: "Tylko cukry", correct: false } ] }, { q: "Jakie są metody normalizacji mleka i homogenizacji?", answers: [ { text: "Normalizacja zawartości tłuszczu, homogenizacja zapobiega rozwarstwianiu", correct: true }, { text: "Brak metod", correct: false }, { text: "Tylko mrożenie", correct: false } ] }, { q: "Wymień rodzaje produktów mlecznych i ich charakterystyki.", answers: [ { text: "Mleko, jogurty, sery, masło; różne zawartości tłuszczu i konsystencje", correct: true }, { text: "Tylko mleko", correct: false }, { text: "Tylko woda", correct: false } ] }, { q: "Opisz proces produkcji i przechowywania serów.", answers: [ { text: "Koagulacja mleka, dojrzewanie, przechowywanie w odpowiednich warunkach chłodniczych", correct: true }, { text: "Tylko pasteryzacja", correct: false }, { text: "Tylko zamrażanie", correct: false } ] }, { q: "Na jakie grupy można podzielić ryby ze względu na środowisko życia?", answers: [ { text: "Morskie i słodkowodne", correct: true }, { text: "Świeże i mrożone", correct: false }, { text: "Małe i duże", correct: false } ] }, { q: "Które z poniższych ryb są morskie?", answers: [ { text: "Flądra, śledź, mintaj", correct: true }, { text: "Pstrąg, karp", correct: false }, { text: "Lin, szczupak", correct: false } ] }, { q: "Które ryby są słodkowodne?", answers: [ { text: "Karp, sandacz, pstrąg", correct: true }, { text: "Łosoś, dorsz", correct: false }, { text: "Tuńczyk, makrela", correct: false } ] }, { q: "Ryby chude mają zawartość tłuszczu:", answers: [ { text: "Do 1%", correct: true }, { text: "1–5%", correct: false }, { text: "Powyżej 5%", correct: false } ] }, { q: "Ryby tłuste mają zawartość tłuszczu:", answers: [ { text: "Powyżej 5%", correct: true }, { text: "Do 1%", correct: false }, { text: "0%", correct: false } ] }, { q: "Które z poniższych są rybami tłustymi?", answers: [ { text: "Łosoś, makrela", correct: true }, { text: "Dorsz, morszczuk", correct: false }, { text: "Karp, sandacz", correct: false } ] }, { q: "Najważniejszymi składnikami ryb są:", answers: [ { text: "Białko, tłuszcze, witamina D, jod, selen", correct: true }, { text: "Wyłącznie woda", correct: false }, { text: "Węglowodany", correct: false } ] }, { q: "W jakiej temperaturze przechowuje się mrożone ryby?", answers: [ { text: "-18°C lub niżej", correct: true }, { text: "0–4°C", correct: false }, { text: "10°C", correct: false } ] }, { q: "Owoce morza to:", answers: [ { text: "Krewetki, kraby, ośmiornice", correct: true }, { text: "Warzywa morskie", correct: false }, { text: "Ryby słodkowodne", correct: false } ] }, { q: "Warzywa nowalijki to:", answers: [ { text: "Warzywa wczesne, o krótkim okresie wegetacji", correct: true }, { text: "Warzywa przechowywane zimą", correct: false }, { text: "Warzywa mrożone", correct: false } ] }, { q: "Warzywa liściaste to m.in.:", answers: [ { text: "Sałata, kapusta", correct: true }, { text: "Marchew, burak", correct: false }, { text: "Ziemniaki, cebula", correct: false } ] }, { q: "Świeże warzywa zawierają:", answers: [ { text: "70–90% wody", correct: true }, { text: "10–20% wody", correct: false }, { text: "50% wody", correct: false } ] }, { q: "Jakie witaminy dominują w warzywach?", answers: [ { text: "C, B, K", correct: true }, { text: "D i E", correct: false }, { text: "A i B12", correct: false } ] }, { q: "W jakiej temperaturze przechowuje się marchew, buraki i chrzan?", answers: [ { text: "0–4°C", correct: true }, { text: "10°C", correct: false }, { text: "-18°C", correct: false } ] }, { q: "Pomidory powinno się przechowywać w temperaturze:", answers: [ { text: "Około 10°C", correct: true }, { text: "0°C", correct: false }, { text: "-5°C", correct: false } ] }, { q: "Które warzywa przechowuje się bardzo krótko?", answers: [ { text: "Kalafior, kalarepa, papryka", correct: true }, { text: "Ziemniaki", correct: false }, { text: "Cebula", correct: false } ] }, { q: "W przypadku występowania rozbieżności między dokumentacją dostawy a sanem rzeczywistym dostarczonych towarów należy sporządzić protokół:", answers: [ { text: "różnic w dostawie", correct: false }, { text: "zniszczeń towarów", correct: false }, { text: "różnic inwentaryzacyjnych", correct: false }, { text: "reklamacji usługi transportu", correct: true } ] }, { q: "Dostawca przyjmując do magazynu zwroty zareklamowanych przez klienta towarów, powinien wystawić dowód:", answers: [ { text: "PZ (Przyjęcie zewnętrzne)", correct: true }, { text: "WZ (Wydanie zewnętrzne)", correct: false }, { text: "PW (Przychód wewnętrzny)", correct: false }, { text: "MM (Przesunięcie międzymagazynowe)", correct: false } ] }, { q: "Hurtownia zakupiła narty u producenta w cenie zakupu netto 600,00 zł/para, stawka podatku VAT 23%. Ile wyniesie wartość zysku hurtowni ze sprzedaży 1 pary nart przy założeniu, że zrealizuje 40% ceny zakupu?", answers: [ { text: "240,00 zł", correct: true }, { text: "295,20 zł", correct: false }, { text: "360,00 zł", correct: false }, { text: "442,80 zł", correct: false } ] }, { q: "Cena sprzedaży netto towaru to 25,00 zł, a cena brutto 30,75 zł. Ile zapłaci klient za towar w przypadku uzyskania 25% rabatu?", answers: [ { text: "6,25 zł", correct: false }, { text: "7,69 zł", correct: false }, { text: "18,75 zł", correct: false }, { text: "23,06 zł", correct: true } ] }, { q: "W sklepie na wywieszonej cenowej towaru nie musi być umieszczona:", answers: [ { text: "nazwa towaru", correct: false }, { text: "cena zakupu netto", correct: true }, { text: "cena sprzedaży brutto", correct: false }, { text: "jednostka miary oferowanego towaru", correct: false } ] }, { q: "Ile wynosi wartość podatku VAT należnego po dokonaniu korekty sprzedaży na podstawie faktury korekty?", answers: [ { text: "26,00 zł", correct: false }, { text: "41,60 zł", correct: true }, { text: "63,56 zł", correct: false }, { text: "66,04 zł", correct: false } ] }, { q: "Ile wynosi stawka podatku VAT przy założeniu, że wartość brutto sprzedaży to 270,00 zł, a kwota VAT to 20,00 zł?", answers: [ { text: "5%", correct: false }, { text: "0%", correct: false }, { text: "8%", correct: false }, { text: "23%", correct: true } ] }, { q: "Dokumentem, który może być podstawą do złożenia reklamacji z tytułu udzielonej gwarancji, jest:", answers: [ { text: "zamówienie", correct: false }, { text: "oświadczenie kupującego", correct: false }, { text: "karta gwarancyjna", correct: true }, { text: "aktualna oferta producenta", correct: false } ] }, { q: "Klient zakupił rower 20.05.2024 r. Otrzymał paragon i kartę gwarancyjną z określonym terminie gwarancji 1 rok. Dnia 02.06.2025 r. zauważył wadę towaru – niesprawny hamulec. Zgodnie z przepisami:", answers: [ { text: "może reklamować towar z tytułu niezgodności towaru z umową.", correct: true }, { text: "może reklamować towar z tytułu gwarancji.", correct: false }, { text: "nie ma możliwości reklamowania towaru z tytułu wady.", correct: false }, { text: "nie ma możliwości reklamowania towaru z tytułu niezgodności towaru z umową.", correct: false } ] }, { q: "Na czym polega peklowanie mięsa?", answers: [ { text: "Na działaniu soli i saletry w celu utrwalenia oraz nadania barwy i smaku", correct: true }, { text: "Na gotowaniu mięsa w wysokiej temperaturze", correct: false }, { text: "Na zamrażaniu mięsa w -30°C", correct: false } ] }, { q: "Jakie są główne cele peklowania?", answers: [ { text: "Utrwalenie, poprawa barwy, smaku i zahamowanie rozwoju drobnoustrojów", correct: true }, { text: "Zwiększenie objętości mięsa", correct: false }, { text: "Usunięcie całego tłuszczu", correct: false } ] }, { q: "Jakie są podstawowe składniki solanki do peklowania?", answers: [ { text: "Woda, sól, saletra/nitryty", correct: true }, { text: "Woda i cukier", correct: false }, { text: "Woda i ocet", correct: false } ] }, { q: "Peklowanie na sucho polega na:", answers: [ { text: "Nacieraniu mięsa mieszanką soli i przypraw", correct: true }, { text: "Zanurzeniu mięsa w oliwie", correct: false }, { text: "Moczeniu mięsa w occie", correct: false } ] }, { q: "Peklowanie na mokro polega na:", answers: [ { text: "Zanurzeniu mięsa w solance", correct: true }, { text: "Podsmażeniu mięsa, a następnie pozostawieniu go w lodówce", correct: false }, { text: "Zamrażaniu mięsa na mokro", correct: false } ] }, { q: "Co to jest piklowanie?", answers: [ { text: "Utrwalanie żywności w kwaśnej zalewie na bazie octu", correct: true }, { text: "Proces suszenia warzyw", correct: false }, { text: "Wędzenie produktów spożywczych", correct: false } ] }, { q: "Do piklowania najczęściej stosuje się:", answers: [ { text: "Ocet, wodę, sól, cukier, przyprawy", correct: true }, { text: "Wodę destylowaną i mąkę", correct: false }, { text: "Samą sól bez żadnych dodatków", correct: false } ] }, { q: "Piklowanie nadaje żywności smak:", answers: [ { text: "Kwaśny i aromatyczny", correct: true }, { text: "Gorzki", correct: false }, { text: "Bez smaku", correct: false } ] }, { q: "Jakie produkty najczęściej się pikluje?", answers: [ { text: "Warzywa: ogórki, cebulę, paprykę; czasem owoce", correct: true }, { text: "Wyłącznie mięso", correct: false }, { text: "Wyłącznie produkty mleczne", correct: false } ] }, { q: "Jaki jest główny efekt mikrobiologiczny piklowania?", answers: [ { text: "Zahamowanie rozwoju bakterii dzięki niskiej wartości pH", correct: true }, { text: "Podgrzewanie produktu do 100°C", correct: false }, { text: "Zamiana tłuszczu w białko", correct: false } ] }, { q: "Czym głównie różnią się ryby słodkowodne od morskich?", answers: [ { text: "Zasolenie środowiska, w którym żyją", correct: true }, { text: "Kolorem mięsa", correct: false }, { text: "Brakiem ości u ryb słodkowodnych", correct: false } ] }, { q: "Które z poniższych ryb są słodkowodne?", answers: [ { text: "Karp, pstrąg, sandacz", correct: true }, { text: "Dorsz, halibut, makrela", correct: false }, { text: "Tuńczyk, sardynka, łosoś atlantycki", correct: false } ] }, { q: "Które z poniższych ryb są morskie?", answers: [ { text: "Dorsz, śledź, halibut", correct: true }, { text: "Amur, okoń, szczupak", correct: false }, { text: "Lin, sum, karaś", correct: false } ] }, { q: "Które ryby częściej mają wyższą zawartość jodu?", answers: [ { text: "Ryby morskie", correct: true }, { text: "Ryby słodkowodne", correct: false }, { text: "Obie grupy mają taką samą zawartość jodu", correct: false } ] }, { q: "Na czym polega metoda FIFO?", answers: [ { text: "Na wydawaniu towarów według zasady: pierwszy wszedł, pierwszy wyszedł", correct: true }, { text: "Na magazynowaniu towaru w dowolnej kolejności", correct: false }, { text: "Na używaniu najnowszych produktów jako pierwszych", correct: false } ] }, { q: "Które z poniższych są negatywnymi skutkami sprzedaży internetowej? (może być kilka poprawnych)", answers: [ { text: "Ryzyko cyberataków", correct: true }, { text: "Koszty zwrotów i reklamacji", correct: true }, { text: "Brak bezpośredniego kontaktu z klientem", correct: true }, { text: "Stały spadek liczby klientów", correct: false }, { text: "Automatyczne zwiększanie zysków", correct: false } ] }, { q: "Które z poniższych są pozytywnymi skutkami sprzedaży internetowej? (może być kilka poprawnych)", answers: [ { text: "Dostęp do szerszego rynku klientów", correct: true }, { text: "Możliwość sprzedaży 24/7", correct: true }, { text: "Niższe koszty prowadzenia działalności", correct: true }, { text: "Brak potrzeby zarządzania magazynem", correct: false }, { text: "Szybsze psucie się towarów", correct: false } ] }, { q: "Która z poniższych form jest przykładem promocji sprzedaży?", answers: [ { text: "Kupony rabatowe", correct: true }, { text: "Ubezpieczenie towarów", correct: false }, { text: "Analiza konkurencji", correct: false } ] }, { q: "Które działanie jest przykładem promocji cenowej?", answers: [ { text: "Obniżka ceny produktu na weekend", correct: true }, { text: "Wprowadzenie nowego logotypu", correct: false }, { text: "Rozszerzenie powierzchni magazynowej", correct: false } ] }, { q: "Na czym polega promocja osobista?", answers: [ { text: "Na bezpośrednim kontakcie sprzedawcy z klientem", correct: true }, { text: "Na reklamie telewizyjnej", correct: false }, { text: "Na projektowaniu banerów", correct: false } ] }, { q: 'Co oznacza poniższy znak?<br><img src="recycling-symbols-cheat-sheet-copy-1582142071.avif" alt="Znak recyklingu" width="220">', answers: [ { text: "Produkt nadaje się do recyklingu", correct: true }, { text: "Produkt jest szkodliwy dla środowiska", correct: false }, { text: "Produkt nie nadaje się do ponownego użycia", correct: false } ] }, { q: 'Co oznacza symbol PET na poniższym znaku?<br><img src="Recycling_pet.svg.png" alt="PET" width="120">', answers: [ { text: "Tworzywo stosowane w butelkach jednorazowych", correct: true }, { text: "Symbol szkła", correct: false }, { text: "Materiał biodegradowalny", correct: false } ] }, { q: 'Co oznacza znak „trzy strzałki z numerem 2”?<br><img src="plastic2-hdpe.jpg" alt="HDPE" width="120">', answers: [ { text: "Tworzywo HDPE – twardy plastik nadający się do recyklingu", correct: true }, { text: "Materiał metalowy", correct: false }, { text: "Odpad niebezpieczny", correct: false } ] }, { q: 'Co oznacza poniższy symbol?<br><img src="recycle-glass-icon-logo-badge-vector-46229190.webp" alt="Szkło" width="120">', answers: [ { text: "Opakowanie przeznaczone do recyklingu szkła", correct: true }, { text: "Produkt wykonany z papieru", correct: false }, { text: "Znak odpadów zmieszanych", correct: false } ] }, { q: "Czym są włókna tekstylne?", answers: [ { text: "Cienkimi elementami używanymi do produkcji nici i tkanin", correct: true }, { text: "Gotowymi materiałami ubraniowymi", correct: false }, { text: "Barwnikami do tkanin", correct: false } ] }, { q: "Które z poniższych są włóknami naturalnymi?", answers: [ { text: "Bawełna i len", correct: true }, { text: "Poliester i nylon", correct: false }, { text: "Akryl i lycra", correct: false } ] }, { q: "Jakie włókno pozyskuje się z owiec?", answers: [ { text: "Wełnę", correct: true }, { text: "Len", correct: false }, { text: "Jedwab syntetyczny", correct: false } ] }, { q: "Jakie włókna należą do sztucznych?", answers: [ { text: "Wiskoza i acetat", correct: true }, { text: "Bawełna i jedwab", correct: false }, { text: "Wełna i kaszmir", correct: false } ] }, { q: "Do czego służą nici w produkcji odzieży?", answers: [ { text: "Do łączenia elementów materiału poprzez szycie", correct: true }, { text: "Do barwienia tkanin", correct: false }, { text: "Do prasowania tkanin", correct: false } ] }, { q: "Co oznacza grubość nici (np. 30, 40, 60)?", answers: [ { text: "Im większa liczba, tym cieńsza nić", correct: true }, { text: "Im większa liczba, tym grubsza nić", correct: false }, { text: "Numer nic nie oznacza", correct: false } ] }, { q: "Jakie nici najczęściej stosuje się do szycia odzieży sportowej?", answers: [ { text: "Nici poliestrowe", correct: true }, { text: "Nici jedwabne", correct: false }, { text: "Nici lniane", correct: false } ] }, { q: "Jak nazywa się metoda skręcania włókien w nici?", answers: [ { text: "Zwartość skrętu", correct: true }, { text: "Zagęszczenie tkaniny", correct: false }, { text: "Gramatura materiału", correct: false } ] }, { q: "Która tkanina jest tkaniną naturalną?", answers: [ { text: "Bawełna", correct: true }, { text: "Poliester", correct: false }, { text: "Nylon", correct: false } ] }, { q: "Która tkanina ma splot płócienny?", answers: [ { text: "Len", correct: true }, { text: "Satyna", correct: false }, { text: "Aksamit", correct: false } ] }, { q: "Co charakteryzuje tkaninę z włókien syntetycznych?", answers: [ { text: "Wysoka odporność na gniecenie", correct: true }, { text: "Wysoka chłonność wilgoci", correct: false }, { text: "Wrażliwość na pranie", correct: false } ] }, { q: "Która z tkanin ma strukturę gładką i błyszczącą?", answers: [ { text: "Satyna", correct: true }, { text: "Flanela", correct: false }, { text: "Jeans", correct: false } ] }, { q: "Co oznacza skrót PTU w kontekście podatków?", answers: [ { text: "Podatek od Towarów i Usług", correct: true }, { text: "Podatek od Transportu Użytkowego", correct: false }, { text: "Podatek Tymczasowy Uzupełniający", correct: false }, { text: "Podatek Techniczny Unijny", correct: false } ] }, { q: "Jaki jest podstawowy cel PTU (podatku od towarów i usług)?", answers: [ { text: "Opodatkowanie sprzedaży towarów i usług", correct: true }, { text: "Opodatkowanie zysków przedsiębiorstw", correct: false }, { text: "Opodatkowanie importu towarów luksusowych", correct: false }, { text: "Opodatkowanie wynagrodzeń pracowników", correct: false } ] }, { q: "Które z poniższych transakcji podlega PTU?", answers: [ { text: "Sprzedaż napoju w sklepie", correct: true }, { text: "Wypłata pensji pracownikowi", correct: false }, { text: "Zakup używanego samochodu od osoby prywatnej (bez VAT)", correct: false }, { text: "Darowizna pieniężna na cele charytatywne", correct: false } ] } ];
+
+// ------------------------------------------------------
+// 2. FUNKCJA LOSUJĄCA 30 PYTAŃ
+// ------------------------------------------------------
+function shuffle(arr) {
+    return arr.sort(() => Math.random() - 0.5);
+}
+
+const selectedQuestions = shuffle([...questions]).slice(50);
+
+// ------------------------------------------------------
+// 3. OBSŁUGA SYSTEMU PYTANIE → ODPOWIEDŹ
+// ------------------------------------------------------
+
+let current = 0;
+let markedAnswers = Array(selectedQuestions.length).fill(null);
+
+const qNum = document.getElementById("questionNumber");
+const qText = document.getElementById("questionText");
+const ansBox = document.getElementById("answersBox");
+const nextBtn = document.getElementById("nextBtn");
+const resultBox = document.getElementById("resultBox");
+
+function loadQuestion() {
+    let q = selectedQuestions[current];
+
+    qNum.innerHTML = `Pytanie ${current+1} z ${selectedQuestions.length}`;
+    qText.innerHTML = q.q;
+
+    ansBox.innerHTML = "";
+
+    q.answers.forEach((a, idx) => {
+        ansBox.innerHTML += `
+            <label>
+                <input type="radio" name="answer" value="${idx}">
+                ${a.text}
+            </label>
+        `;
+    });
+
+    // Zaznacz poprzednią odpowiedź
+    if (markedAnswers[current] !== null) {
+        ansBox.querySelectorAll("input")[markedAnswers[current]].checked = true;
+    }
+
+    // Ostatnie pytanie
+    nextBtn.textContent = current === selectedQuestions.length - 1 ? "ZAKOŃCZ" : "DALEJ";
+}
+
+function saveAnswer() {
+    const checked = ansBox.querySelector("input:checked");
+    markedAnswers[current] = checked ? Number(checked.value) : null;
+}
+
+function nextQuestion() {
+    saveAnswer();
+
+    if (current === selectedQuestions.length - 1) {
+        finishQuiz();
+    } else {
+        current++;
+        loadQuestion();
+    }
+}
+
+function prevQuestion() {
+    if (current > 0) {
+        saveAnswer();
+        current--;
+        loadQuestion();
+    }
+}
+
+function finishQuiz() {
+    let score = 0;
+
+    selectedQuestions.forEach((q, i) => {
+        if (markedAnswers[i] !== null && q.answers[markedAnswers[i]].correct) {
+            score++;
+        }
+    });
+
+    document.getElementById("quizArea").style.display = "none";
+
+    resultBox.style.display = "block";
+    resultBox.innerHTML = `
+        Twój wynik to:<br><br>
+        <b>${score} / ${selectedQuestions.length}</b>
+    `;
+}
+
+loadQuestion();
+
+</script>
+</body>
+</html>
