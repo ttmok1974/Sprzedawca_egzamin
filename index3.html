@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz – tłumaczenie (DE ↔ PL)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f7;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+    h1, h2 {
+      color: #222;
+    }
+    .question {
+      margin-bottom: 16px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #059669;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+<script>
+const answers = {
+  1: ["Als ich 7 Jahre alt war, hat mein Vater eine Stelle in Madrid bekommen."],
+  2: ["Als er eine Wohnung gefunden hat, ist die ganze Familie umgezogen."],
+  3: ["Als ich in die Schule gegangen bin, habe ich kein Spanisch verstanden."],
+  4: ["Als wir nach fünf Jahren nach Deutschland zurückgekommen sind, habe ich fließend Spanisch gesprochen."],
+  5: ["Wenn ich nächstes Jahr nach England fahre, lerne ich intensiv Englisch."],
+  6: ["Welche Praktika haben Sie gemacht?"],
+  7: ["Hast du die Stelle bekommen?"],
+  8: ["Wie viel kann ich verdienen?"],
+  9: ["Ich kann seit einem Jahr keine Arbeit finden."],
+  10: ["Ich möchte keine Überstunden mehr machen."],
+  11: ["Bewerber", "der Bewerber"],
+  12: ["Arbeitgeber", "der Arbeitgeber"],
+  13: ["Arbeitnehmer", "der Arbeitnehmer"],
+  14: ["Arbeitsloser", "der Arbeitslose"],
+  15: ["Überstunden"]
+};
+
+function normalize(text) {
+  return text.trim().toLowerCase();
+}
+
+function checkAnswers() {
+  let score = 0;
+  for (let i = 1; i <= 15; i++) {
+    const input = document.getElementById('q' + i);
+    if (!input) continue;
+
+    let feedback = input.nextElementSibling;
+    if (!feedback || !feedback.classList.contains('correct-answer')) {
+      feedback = document.createElement('div');
+      feedback.className = 'correct-answer';
+      feedback.style.fontSize = '0.9em';
+      feedback.style.marginTop = '4px';
+      input.after(feedback);
+    }
+
+    const user = normalize(input.value);
+    const correctList = answers[i].map(a => normalize(a));
+
+    if (correctList.includes(user)) {
+      input.style.border = '2px solid green';
+      feedback.style.color = 'green';
+      feedback.innerText = '✓ Poprawnie';
+      score++;
+    } else {
+      input.style.border = '2px solid red';
+      feedback.style.color = 'red';
+      feedback.innerText = 'Poprawna odpowiedź: ' + answers[i].join(' / ');
+    }
+  }
+  document.getElementById('result').innerText = `Twój wynik: ${score} / 12`;
+}
+
+function resetQuiz() {
+  for (let i = 1; i <= 15; i++) {
+    location.reload();
+    const input = document.getElementById('q' + i);
+    if (!input) continue;
+    input.value = '';
+    input.style.border = '1px solid #ccc';
+    const feedback = input.nextElementSibling;
+    if (feedback && feedback.classList.contains('correct-answer')) {
+      feedback.remove();
+    }
+    else 
+    {
+      input.style.border = '2px solid red';
+    }
+  }
+  document.getElementById('result').innerText = '';
+} 
+  document.getElementById('result').innerText = `Twój wynik: ${score} / 15`;
+</script>
+</head>
+<body>
+  <div class="container">
+    <h1>Quiz – tłumaczenie zdań i słów</h1>
+
+    <h2>Część 1 – Przetłumacz zdania (PL → DE)</h2>
+
+    <div class="question">
+      1. Gdy miałem/am 7 lat, mój ojciec dostał pracę w Madrycie.
+      <input type="text" id="q1" placeholder="Tłumaczenie na język polski">
+    </div>
+
+    <div class="question">
+      2. Gdy znalazł mieszkanie, cała rodzina przeprowadziła się do Madrytu.
+      <input type="text" id="q2" placeholder="Tłumaczenie na język polski">
+    </div>
+
+    <div class="question">
+      3. Kiedy poszedłem/poszłam do szkoły, nie rozumiałem/am ani jednego słowa po hiszpańsku.
+      <input type="text" id="q3" placeholder="Tłumaczenie na język polski">
+    </div>
+
+    <div class="question">
+      4. Gdy po pięciu latach wróciliśmy do Niemiec, mówiłem/am płynnie po hiszpańsku.
+      <input type="text" id="q4" placeholder="Tłumaczenie na język polski">
+    </div>
+
+    <div class="question">
+      5. Jeśli pojadę w przyszłym roku do Anglii, będę intensywnie uczyć się angielskiego.
+      <input type="text" id="q5" placeholder="Tłumaczenie na język polski">
+    </div>
+
+    <h2>Część 2 – Przetłumacz zdania (PL → DE)</h2>
+
+    <div class="question">
+      6. Jakie praktyki Pan/Pani odbył(a)?
+      <input type="text" id="q6" placeholder="Übersetzung auf Deutsch">
+    </div>
+
+    <div class="question">
+      7. Czy dostałeś/dostałaś tę pracę?
+      <input type="text" id="q7" placeholder="Übersetzung auf Deutsch">
+    </div>
+
+    <div class="question">
+      8. Ile mogę zarabiać?
+      <input type="text" id="q8" placeholder="Übersetzung auf Deutsch">
+    </div>
+
+    <div class="question">
+      9. Od roku nie mogę znaleźć pracy.
+      <input type="text" id="q9" placeholder="Übersetzung auf Deutsch">
+    </div>
+
+     <div class="question">
+      10. Nie chcę już pracować w nadgodzinach.
+      <input type="text" id="q10" placeholder="Übersetzung auf Deutsch">
+    </div>
+
+    <h2>Część 3 – Przetłumacz słowa (PL → DE)</h2>
+
+    <div class="question">11. kandydat do pracy → <input type="text" id="q11"></div>
+    <div class="question">12. pracodawca → <input type="text" id="q12"></div>
+    <div class="question">13. pracownik → <input type="text" id="q13"></div>
+    <div class="question">14. bezrobotny → <input type="text" id="q14"></div>
+    <div class="question">15. nadgodziny → <input type="text" id="q15"></div>
+
+    <button onclick="checkAnswers()">Sprawdź odpowiedzi</button>
+<button onclick="resetQuiz()" style="margin-left:10px; background:#6b7280;">Resetuj quiz</button>
+<p id="result" style="font-weight:bold; margin-top:15px;"></p>
+  </div>
+</body>
+</html>
